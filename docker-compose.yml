@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  flashledger:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://flashledger:flashledger@postgres:5432/flashledger
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - flashledger-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: flashledger
+      POSTGRES_USER: flashledger
+      POSTGRES_PASSWORD: flashledger
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - flashledger-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flashledger"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  flashledger-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
