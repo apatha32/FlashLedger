@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body, #root {
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    background-color: #060b18;
+    color: #e2e8f0;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track { background: #0a0f1e; }
+  ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2563eb; }
+}
+
+@layer components {
+  .panel {
+    @apply bg-navy-800 border border-white/5 rounded-xl shadow-panel;
+  }
+
+  .panel-header {
+    @apply px-4 py-3 border-b border-white/5 flex items-center justify-between;
+  }
+
+  .panel-title {
+    @apply text-xs font-semibold tracking-widest text-slate-400 uppercase;
+  }
+
+  .stat-card {
+    @apply panel p-4 flex flex-col gap-1;
+  }
+
+  .stat-label {
+    @apply text-xs text-slate-500 uppercase tracking-wider;
+  }
+
+  .stat-value {
+    @apply font-mono text-lg font-semibold text-slate-100;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 rounded-lg bg-brand text-white font-semibold text-sm
+           hover:bg-brand-light active:scale-95 transition-all duration-150
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-bull {
+    @apply px-4 py-2 rounded-lg bg-bull text-white font-semibold text-sm
+           hover:brightness-110 active:scale-95 transition-all duration-150
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-bear {
+    @apply px-4 py-2 rounded-lg bg-bear text-white font-semibold text-sm
+           hover:brightness-110 active:scale-95 transition-all duration-150
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .input-field {
+    @apply w-full bg-navy-900 border border-white/10 rounded-lg px-3 py-2
+           text-sm font-mono text-slate-100 placeholder-slate-600
+           focus:outline-none focus:border-brand/60 focus:ring-1 focus:ring-brand/30
+           transition-colors duration-150;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-green  { @apply badge bg-bull/15 text-bull; }
+  .badge-red    { @apply badge bg-bear/15 text-bear; }
+  .badge-blue   { @apply badge bg-brand/15 text-brand-light; }
+  .badge-yellow { @apply badge bg-gold/15 text-gold; }
+}
+
+/* Gradient mesh background */
+.bg-mesh {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(59,130,246,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(99,102,241,0.06) 0%, transparent 60%);
+}
+
+/* Depth bar fill animation */
+@keyframes barFill {
+  from { width: 0; }
+}
+
+/* Number flash */
+@keyframes flashGreen {
+  0%, 100% { color: inherit; }
+  50% { color: #22c55e; text-shadow: 0 0 12px rgba(34,197,94,0.6); }
+}
+@keyframes flashRed {
+  0%, 100% { color: inherit; }
+  50% { color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.6); }
+}
+.flash-green { animation: flashGreen 0.5s ease; }
+.flash-red   { animation: flashRed 0.5s ease; }
+
+/* Prediction glow ring */
+.glow-ring-green {
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.4), 0 0 40px rgba(34, 197, 94, 0.2);
+}
+.glow-ring-red {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.2);
+}

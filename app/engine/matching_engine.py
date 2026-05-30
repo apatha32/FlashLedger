@@ -8,7 +8,7 @@ from typing import List, Optional, Callable
 from uuid import uuid4
 
 from app.engine.order_book import OrderBook, Order, Side, create_order
-
+from app.kafka import producer as kafka
 
 @dataclass
 class Trade:
@@ -20,6 +20,7 @@ class Trade:
     seller_id: str
     price: float
     quantity: float
+    aggressor_side: str = "buy"  # which side was the taker / aggressive order
     timestamp: datetime = field(default_factory=datetime.utcnow)
     
     def to_dict(self) -> dict:
@@ -31,6 +32,7 @@ class Trade:
             "seller_id": self.seller_id,
             "price": self.price,
             "quantity": self.quantity,
+            "aggressor_side": self.aggressor_side,
             "timestamp": self.timestamp.isoformat()
         }
 
@@ -162,7 +164,8 @@ class MatchingEngine:
                     buy_order=incoming,
                     sell_order=resting,
                     price=resting.price,
-                    quantity=fill_qty
+                    quantity=fill_qty,
+                    aggressor_side="buy",
                 )
                 trades.append(trade)
                 
@@ -208,7 +211,8 @@ class MatchingEngine:
                     buy_order=resting,
                     sell_order=incoming,
                     price=resting.price,
-                    quantity=fill_qty
+                    quantity=fill_qty,
+                    aggressor_side="sell",
                 )
                 trades.append(trade)
                 
@@ -227,8 +231,15 @@ class MatchingEngine:
         
         return trades
     
-    def _execute_trade(self, buy_order: Order, sell_order: Order, price: float, quantity: float) -> Trade:
-        """Execute a trade between two orders"""
+    def _execute_trade(
+        self,
+        buy_order: Order,
+        sell_order: Order,
+        price: float,
+        quantity: float,
+        aggressor_side: str = "buy",
+    ) -> Trade:
+        """Execute a trade between two orders and publish to Kafka."""
         trade = Trade(
             trade_id=str(uuid4()),
             buy_order_id=buy_order.order_id,
@@ -236,7 +247,8 @@ class MatchingEngine:
             buyer_id=buy_order.user_id,
             seller_id=sell_order.user_id,
             price=price,
-            quantity=quantity
+            quantity=quantity,
+            aggressor_side=aggressor_side,
         )
         
         # Update metrics
@@ -248,6 +260,9 @@ class MatchingEngine:
                 callback(trade)
             except Exception as e:
                 print(f"Trade callback error: {e}")
+        
+        # Publish trade event to Kafka
+        kafka.publish("trades", trade.to_dict())
         
         return trade
     

@@ -1,32 +1,25 @@
 version: '3.8'
 
-services:
-  flashledger:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://flashledger:flashledger@postgres:5432/flashledger
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-    networks:
-      - flashledger-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
+# ──────────────────────────────────────────────────────────────
+#  FlashLedger v2 — full streaming + ML stack
+#
+#  Services:
+#    postgres      — trade storage + market_features
+#    zookeeper     — Kafka coordination
+#    kafka         — event streaming (topics: trades, orders)
+#    flashledger   — FastAPI matching engine
+#    spark         — PySpark feature pipeline
+#    frontend      — React + Tailwind dashboard (nginx)
+# ──────────────────────────────────────────────────────────────
 
+services:
+
+  # ── PostgreSQL ────────────────────────────────────────────────
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: flashledger
-      POSTGRES_USER: flashledger
+      POSTGRES_DB:       flashledger
+      POSTGRES_USER:     flashledger
       POSTGRES_PASSWORD: flashledger
     ports:
       - "5432:5432"
@@ -39,6 +32,119 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+  # ── Zookeeper ─────────────────────────────────────────────────
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME:   2000
+    ports:
+      - "2181:2181"
+    networks:
+      - flashledger-network
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 | grep imok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Kafka ─────────────────────────────────────────────────────
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "9092:9092"
+      - "9101:9101"
+    environment:
+      KAFKA_BROKER_ID:                        1
+      KAFKA_ZOOKEEPER_CONNECT:               zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP:  PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS:            PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE:       "true"
+      KAFKA_LOG_RETENTION_HOURS:             24
+      KAFKA_JMX_PORT:                        9101
+      KAFKA_JMX_HOSTNAME:                    localhost
+    networks:
+      - flashledger-network
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # ── FlashLedger API ───────────────────────────────────────────
+  flashledger:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL:            postgresql+asyncpg://flashledger:flashledger@postgres:5432/flashledger
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - flashledger-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ── PySpark Feature Pipeline ──────────────────────────────────
+  spark:
+    image: bitnami/spark:3.5
+    depends_on:
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      POSTGRES_HOST:           postgres
+      POSTGRES_PORT:           "5432"
+      POSTGRES_DB:             flashledger
+      POSTGRES_USER:           flashledger
+      POSTGRES_PASSWORD:       flashledger
+      SPARK_MODE:              master
+    volumes:
+      - ./spark:/opt/spark-apps
+    command: >
+      bash -c "
+        pip install psycopg2-binary &&
+        spark-submit
+          --master local[2]
+          --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,org.postgresql:postgresql:42.7.1
+          /opt/spark-apps/feature_pipeline.py
+      "
+    networks:
+      - flashledger-network
+    restart: on-failure
+
+  # ── React Frontend ────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - flashledger
+    networks:
+      - flashledger-network
+    restart: unless-stopped
 
 networks:
   flashledger-network:

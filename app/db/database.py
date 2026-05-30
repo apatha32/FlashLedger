@@ -5,19 +5,30 @@ import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 
-# Database URL from environment or default
-DATABASE_URL = os.getenv(
+# Database URL — defaults to SQLite for zero-config local/HF Spaces runs
+_RAW_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://flashledger:flashledger@localhost:5432/flashledger"
+    "sqlite+aiosqlite:///./flashledger.db"
 )
+# Normalise Heroku-style postgres:// URLs
+DATABASE_URL = _RAW_URL.replace("postgres://", "postgresql+asyncpg://", 1)
 
-# Create async engine
-engine = create_async_engine(
-    DATABASE_URL,
-    echo=False,  # Set to True for SQL logging
-    pool_size=10,
-    max_overflow=20
-)
+_IS_SQLITE = DATABASE_URL.startswith("sqlite")
+
+# SQLite does not support pool_size / max_overflow
+if _IS_SQLITE:
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,
+        connect_args={"check_same_thread": False},
+    )
+else:
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,
+        pool_size=10,
+        max_overflow=20,
+    )
 
 # Session factory
 async_session = async_sessionmaker(

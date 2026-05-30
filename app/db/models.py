@@ -44,3 +44,34 @@ class Trade(Base):
             "quantity": self.quantity,
             "timestamp": self.timestamp.isoformat()
         }
+
+
+class MarketFeature(Base):
+    """
+    Computed market microstructure features written by the PySpark pipeline.
+    Each row represents one 10-second feature window.
+    """
+    __tablename__ = "market_features"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    window_start: Mapped[datetime] = mapped_column(DateTime, index=True)
+    window_end: Mapped[datetime] = mapped_column(DateTime)
+    trade_volume: Mapped[float] = mapped_column(Float, default=0.0)
+    vwap: Mapped[float] = mapped_column(Float, default=0.0)
+    order_imbalance: Mapped[float] = mapped_column(Float, default=0.0)
+    trade_velocity: Mapped[float] = mapped_column(Float, default=0.0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        Index("idx_mf_window_start_desc", window_start.desc()),
+    )
+
+    def to_dict(self) -> dict:
+        return {
+            "window_start": self.window_start.isoformat(),
+            "window_end": self.window_end.isoformat(),
+            "trade_volume": self.trade_volume,
+            "vwap": self.vwap,
+            "order_imbalance": self.order_imbalance,
+            "trade_velocity": self.trade_velocity,
+        }

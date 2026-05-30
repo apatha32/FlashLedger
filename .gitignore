@@ -32,12 +32,27 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv*/
+venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
 # Logs
 *.log
 logs/
 
-# Build
-dist/
+# Build output (frontend; Docker will build from source)
+frontend/dist/
+frontend/node_modules/
 
 # Docker
 docker-compose.override.yml
+
+# Training venv (local only)
+.venv_train/
