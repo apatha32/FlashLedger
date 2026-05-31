@@ -10,9 +10,9 @@ RUN npm run build
 FROM python:3.11-slim
 WORKDIR /app
 
-# System dependencies
+# System dependencies (librdkafka-dev is optional; Kafka/confluent-kafka gracefully degrades)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl librdkafka-dev gcc \
+    curl gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # Install CPU-only PyTorch first (saves ~500 MB vs CUDA build)

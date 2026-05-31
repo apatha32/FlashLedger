@@ -10,8 +10,8 @@ pytest-asyncio==0.23.3
 prometheus-client==0.19.0
 python-dotenv==1.0.0
 
-# Kafka streaming
-confluent-kafka==2.3.0
+# Kafka streaming (optional; gracefully handled if unavailable)
+# confluent-kafka==2.3.0
 
 # ML model inference (used at runtime by /prediction endpoint)
 torch==2.2.1
