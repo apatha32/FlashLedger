@@ -17,7 +17,7 @@ python-dotenv==1.0.0
 torch==2.2.1
 numpy==1.26.4
 pandas==2.2.0
-scikit-learn==1.4.1
+scikit-learn>=1.5.0
 
 # Recommendation system
 lightgbm==4.3.0
