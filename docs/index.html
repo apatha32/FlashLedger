@@ -12,248 +12,309 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2c3e50;
+            background: #ffffff;
             min-height: 100vh;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 60px 40px;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #e8ecf1;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a5f7a;
         }
 
         /* Hero Section */
         .hero {
             text-align: center;
-            color: white;
-            margin-bottom: 60px;
-            animation: slideDown 0.8s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            margin-bottom: 80px;
+            padding-top: 40px;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            font-weight: 800;
-            letter-spacing: -1px;
+            font-size: 3rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+            color: #1a5f7a;
+            letter-spacing: -0.5px;
         }
 
         .hero .tagline {
-            font-size: 1.3rem;
-            opacity: 0.95;
-            margin-bottom: 30px;
+            font-size: 1.25rem;
+            color: #546e7a;
+            margin-bottom: 40px;
+            font-weight: 400;
         }
 
         /* CTA Button */
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #1a5f7a;
             color: white;
-            padding: 16px 40px;
-            border-radius: 50px;
+            padding: 14px 36px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(26, 95, 122, 0.15);
             border: none;
             cursor: pointer;
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            background: #0d3f52;
+            box-shadow: 0 8px 20px rgba(26, 95, 122, 0.25);
+            transform: translateY(-2px);
         }
 
         /* Content Section */
         .content {
             background: white;
-            border-radius: 16px;
-            padding: 50px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.8s ease-out 0.2s both;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .section {
-            margin-bottom: 50px;
+            margin-bottom: 70px;
+            padding-bottom: 70px;
+            border-bottom: 1px solid #e8ecf1;
         }
 
         .section:last-child {
             margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
         h2 {
             font-size: 2rem;
-            margin-bottom: 20px;
-            color: #667eea;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h2::before {
-            content: '';
-            width: 4px;
-            height: 30px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 2px;
+            margin-bottom: 24px;
+            color: #1a5f7a;
+            font-weight: 700;
         }
 
         p {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: #555;
-            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #546e7a;
+            margin-bottom: 16px;
         }
 
-        /* What Section */
+        strong {
+            color: #1a5f7a;
+            font-weight: 600;
+        }
+
+        /* Features Grid */
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 30px;
         }
 
         .feature-box {
-            background: #f8f9ff;
-            padding: 20px;
+            background: #f5f8fb;
+            padding: 24px;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 3px solid #1a5f7a;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            box-shadow: 0 4px 12px rgba(26, 95, 122, 0.08);
+            transform: translateY(-2px);
         }
 
         .feature-box strong {
-            color: #667eea;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        .feature-box p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #637785;
         }
 
         /* Tech Stack */
         .tech-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-top: 30px;
         }
 
         .tech-item {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
+            background: #f5f8fb;
+            padding: 18px;
             border-radius: 8px;
             text-align: center;
-            font-weight: 600;
+            border: 1px solid #d4dfe8;
             transition: all 0.3s ease;
         }
 
         .tech-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            border-color: #1a5f7a;
+            box-shadow: 0 4px 12px rgba(26, 95, 122, 0.1);
+            transform: translateY(-2px);
         }
 
         .tech-category {
-            font-size: 0.85rem;
-            opacity: 0.9;
+            font-size: 0.75rem;
+            color: #90a4ae;
             margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         .tech-name {
-            font-size: 1.1rem;
+            font-size: 1rem;
+            color: #1a5f7a;
+            font-weight: 600;
         }
 
         /* Demo Section */
         .demo-steps {
-            background: #f0f4ff;
-            padding: 30px;
+            background: #f5f8fb;
+            padding: 32px;
             border-radius: 8px;
-            margin-top: 20px;
+            margin-top: 30px;
+            border-left: 3px solid #1a5f7a;
         }
 
         .demo-steps ol {
-            margin-left: 20px;
-            line-height: 2;
+            margin-left: 24px;
         }
 
         .demo-steps li {
-            color: #555;
-            margin-bottom: 12px;
+            color: #546e7a;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+        }
+
+        .demo-steps li strong {
+            color: #1a5f7a;
         }
 
         .demo-steps code {
-            background: #fff;
-            padding: 2px 6px;
+            background: white;
+            padding: 3px 8px;
             border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            color: #f5576c;
+            font-family: 'Monaco', 'Courier New', monospace;
+            color: #d32f2f;
+            font-size: 0.9rem;
         }
 
-        /* Why Section */
+        /* Highlights */
         .highlights {
-            background: #fff3e0;
-            padding: 30px;
+            background: #f5f8fb;
+            padding: 32px;
             border-radius: 8px;
-            border-left: 4px solid #ff9800;
-            margin-top: 20px;
+            border-left: 3px solid #1a5f7a;
+            margin-top: 30px;
         }
 
         .highlights ul {
             list-style: none;
-            margin-left: 0;
         }
 
         .highlights li {
-            padding: 10px 0;
-            padding-left: 30px;
+            padding: 12px 0;
+            padding-left: 32px;
             position: relative;
-            color: #555;
+            color: #546e7a;
+            line-height: 1.7;
         }
 
         .highlights li::before {
-            content: '⚡';
+            content: '✓';
             position: absolute;
             left: 0;
-            font-size: 1.2rem;
+            color: #1a5f7a;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Architecture */
+        ul[style*="margin-left"] {
+            list-style: none !important;
+        }
+
+        ul[style*="margin-left"] li {
+            padding-left: 28px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        ul[style*="margin-left"] li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #1a5f7a;
+            font-weight: 600;
         }
 
         /* Footer CTA */
         .footer-cta {
             text-align: center;
-            margin-top: 50px;
-            padding-top: 40px;
-            border-top: 2px solid #eee;
+            margin-top: 60px;
+            padding-top: 60px;
+            border-top: 1px solid #e8ecf1;
         }
 
         .footer-cta h3 {
-            margin-bottom: 20px;
-            color: #667eea;
+            margin-bottom: 28px;
+            color: #1a5f7a;
             font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Links */
+        a {
+            color: #1a5f7a;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0d3f52;
+            text-decoration: underline;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
             .hero h1 {
                 font-size: 2rem;
             }
@@ -262,37 +323,36 @@
                 font-size: 1.1rem;
             }
 
-            .content {
-                padding: 30px;
-            }
-
             h2 {
                 font-size: 1.5rem;
             }
 
             .tech-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
             }
-        }
 
-        /* Icon Styles */
-        .icon {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-            vertical-align: middle;
+            .features {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">⚡ FlashLedger</div>
+            <a href="https://github.com/apatha32/FlashLedger" target="_blank" style="color: #1a5f7a;">GitHub</a>
+        </div>
+    </nav>
+
     <div class="container">
         <!-- Hero Section -->
         <section class="hero">
-            <h1>⚡ FlashLedger</h1>
+            <h1>FlashLedger</h1>
             <p class="tagline">Production-Grade Low Latency Order Matching Engine</p>
             <a href="https://ambarish0221-flashledger.hf.space" class="cta-button" target="_blank">
-                🚀 Launch Live Demo
+                Launch Live Demo →
             </a>
         </section>
 
@@ -306,19 +366,19 @@
                 <div class="features">
                     <div class="feature-box">
                         <strong>Order Matching</strong>
-                        Order matching in <strong>microseconds</strong> using price-time priority heap algorithm
+                        <p>Order matching in <strong>microseconds</strong> using price-time priority heap algorithm</p>
                     </div>
                     <div class="feature-box">
                         <strong>Real-Time Streaming</strong>
-                        Apache Kafka + PySpark for live market microstructure analysis
+                        <p>Apache Kafka + PySpark for live market microstructure analysis</p>
                     </div>
                     <div class="feature-box">
                         <strong>Machine Learning</strong>
-                        LSTM price prediction & LightGBM market regime classification
+                        <p>LSTM price prediction & LightGBM market regime classification</p>
                     </div>
                     <div class="feature-box">
                         <strong>LLM Integration</strong>
-                        Groq AI agent that generates natural-language trading commentary
+                        <p>Groq AI agent that generates natural-language trading commentary</p>
                     </div>
                 </div>
             </section>
@@ -416,13 +476,13 @@
             <section class="section">
                 <h2>Architecture Highlights</h2>
                 <p><strong>Multi-Layer Real-Time Processing:</strong></p>
-                <ul style="margin-left: 20px; color: #555; line-height: 2;">
-                    <li>✓ <strong>Request Layer:</strong> FastAPI REST + WebSocket endpoints</li>
-                    <li>✓ <strong>Matching Engine:</strong> In-memory heapq with price-time priority</li>
-                    <li>✓ <strong>Streaming Layer:</strong> Kafka topics → PySpark transformations</li>
-                    <li>✓ <strong>ML Layer:</strong> Real-time feature engineering & model inference</li>
-                    <li>✓ <strong>LLM Layer:</strong> Groq API for commentary & autonomous trading</li>
-                    <li>✓ <strong>Frontend Layer:</strong> React dashboard with live updates</li>
+                <ul style="margin-left: 20px; color: #546e7a; line-height: 1.8; list-style: none;">
+                    <li>Request Layer: FastAPI REST + WebSocket endpoints</li>
+                    <li>Matching Engine: In-memory heapq with price-time priority</li>
+                    <li>Streaming Layer: Kafka topics → PySpark transformations</li>
+                    <li>ML Layer: Real-time feature engineering & model inference</li>
+                    <li>LLM Layer: Groq API for commentary & autonomous trading</li>
+                    <li>Frontend Layer: React dashboard with live updates</li>
                 </ul>
             </section>
 
@@ -431,7 +491,7 @@
                 <h2>GitHub Repository</h2>
                 <p>Source code, full documentation, and deployment instructions available at:</p>
                 <p>
-                    <a href="https://github.com/apatha32/FlashLedger" target="_blank" style="color: #667eea; font-weight: 600; text-decoration: none;">
+                    <a href="https://github.com/apatha32/FlashLedger" target="_blank">
                         github.com/apatha32/FlashLedger →
                     </a>
                 </p>
@@ -441,7 +501,7 @@
             <section class="footer-cta">
                 <h3>Ready to See It in Action?</h3>
                 <a href="https://ambarish0221-flashledger.hf.space" class="cta-button" target="_blank">
-                    🚀 Launch Live Demo Now
+                    Launch Live Demo →
                 </a>
             </section>
         </div>
